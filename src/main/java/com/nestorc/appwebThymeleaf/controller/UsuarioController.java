@@ -4,7 +4,8 @@ import com.nestorc.appwebThymeleaf.dto.ResponseWrapper;
 import com.nestorc.appwebThymeleaf.dto.Telefono;
 import com.nestorc.appwebThymeleaf.dto.Usuario;
 import com.nestorc.appwebThymeleaf.feign.FeignService;
-import feign.Response;
+
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -81,6 +82,7 @@ public class UsuarioController {
         HttpStatus statusCode = HttpStatus.OK;
         Response response = null;
 
+
         try {
             String usuarioId = request.getParameter("FormUsuarioId");
             String usuarioNombre = request.getParameter("FormUsuarioNombre");
@@ -116,8 +118,8 @@ public class UsuarioController {
 
             ResponseWrapper<Usuario> user = feignUserService.createUser(usuario);
             if (!user.isSuccess()) {
-                ErrorResponse errorResponse;
-                errorResponse = new ErrorResponse();
+
+                ErrorResponse errorResponse = new ErrorResponse();
                 errorResponse.addMessage(user.getMessage());
                 response = errorResponse;
 
