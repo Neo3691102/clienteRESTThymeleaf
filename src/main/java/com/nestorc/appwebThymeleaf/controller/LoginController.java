@@ -1,5 +1,6 @@
 package com.nestorc.appwebThymeleaf.controller;
 
+import com.nestorc.appwebThymeleaf.dto.Login;
 import com.nestorc.appwebThymeleaf.feign.FeignService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class LoginController {
@@ -24,6 +27,12 @@ public class LoginController {
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+
+        //traer el usuario y contraseña con feign y luego evaluarlo
+//        List<Login> usuariosBD = new ArrayList();
+//        usuariosBD.forEach(() -> {
+//
+//        });
 
         //Validar el usuario y contraseña contra los de una tabla en base de datos
 //        if(username.equals("nestor") && password.equals("333")){
