@@ -1,6 +1,7 @@
 package com.nestorc.appwebThymeleaf.controller;
 
 import com.nestorc.appwebThymeleaf.dto.Login;
+import com.nestorc.appwebThymeleaf.dto.ResponseWrapper;
 import com.nestorc.appwebThymeleaf.feign.FeignService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,10 +30,23 @@ public class LoginController {
         String password = request.getParameter("password");
 
         //traer el usuario y contraseña con feign y luego evaluarlo
-//        List<Login> usuariosBD = new ArrayList();
-//        usuariosBD.forEach(() -> {
-//
-//        });
+        Login usuarioAuth = new Login();
+        ResponseWrapper<List<Login>> usuariosBD = feignService.getAuthUsers();
+        usuariosBD.getResponseEntity().getBody().forEach(user ->{
+            if(user.getUsuarioBD() == username && user.getPasswordBD() == password ){
+                usuarioAuth.setUsuarioBD(username);
+                usuarioAuth.setPasswordBD(password);
+            }else{
+                try {
+                    throw new Exception("Hubo un error en la autenticacion");
+                } catch (Exception e) {
+                    throw new RuntimeException("Error en la autenticacion");
+                }
+            }
+        });
+        request.getSession().setAttribute("username", usuarioAuth.getUsuarioBD());
+        response.sendRedirect("/");
+
 
         //Validar el usuario y contraseña contra los de una tabla en base de datos
 //        if(username.equals("nestor") && password.equals("333")){
