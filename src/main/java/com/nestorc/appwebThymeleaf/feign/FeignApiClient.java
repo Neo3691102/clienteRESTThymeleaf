@@ -1,5 +1,6 @@
 package com.nestorc.appwebThymeleaf.feign;
 
+import com.nestorc.appwebThymeleaf.dto.Login;
 import com.nestorc.appwebThymeleaf.dto.ResponseWrapper;
 import com.nestorc.appwebThymeleaf.dto.Telefono;
 import com.nestorc.appwebThymeleaf.dto.Usuario;
@@ -46,4 +47,11 @@ public interface FeignApiClient {
 
     @RequestLine("DELETE /telefonos/{id}")
     void deletePhone(@Param("id") int id);
+
+    //login
+    @RequestLine("GET /autenticacion")
+    ResponseWrapper<List<Login>> authUsers();
+
+    @RequestLine("GET /autenticacion/{id}")
+    ResponseWrapper<Login> authUserById(@Param("id") int id);
 }

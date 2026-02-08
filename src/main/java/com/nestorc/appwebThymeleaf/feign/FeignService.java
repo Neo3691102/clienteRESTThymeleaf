@@ -1,5 +1,6 @@
 package com.nestorc.appwebThymeleaf.feign;
 
+import com.nestorc.appwebThymeleaf.dto.Login;
 import com.nestorc.appwebThymeleaf.dto.ResponseWrapper;
 import com.nestorc.appwebThymeleaf.dto.Telefono;
 import com.nestorc.appwebThymeleaf.dto.Usuario;
@@ -127,4 +128,28 @@ public class FeignService {
         }
         feignApiClient.deletePhone(id);
     }
+
+    //login
+    public ResponseWrapper<List<Login>> getAuthUsers() {
+        log.info("Obteniendo usuarios desde la api {}", apiUrl);
+        return feignApiClient.authUsers();
+    }
+
+    public ResponseWrapper<Login> getAuthUserById(int id) throws Exception {
+        if(id <= 0){
+            throw new Exception("El id debe ser mayor a cero");
+        }
+
+        log.info("Obteniendo el usuario con el id#{}", id);
+        ResponseWrapper<Login> usuarioAuth = feignApiClient.authUserById(id);
+
+        if(usuarioAuth.getResponseEntity().getBody() == null){
+            log.warn("Usuario con el id {} no fue encontrado", id);
+            throw new Exception("Usuario no encontrado");
+        }
+
+        return usuarioAuth;
+
+    }
+
 }
