@@ -23,39 +23,44 @@ public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Object login(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("pagina-login");
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        //traer el usuario y contraseña con feign y luego evaluarlo
-        Login usuarioAuth = new Login();
-        ResponseWrapper<List<Login>> usuariosBD = feignService.getAuthUsers();
-        usuariosBD.getResponseEntity().getBody().forEach(user ->{
-            if(user.getUsuarioBD() == username && user.getPasswordBD() == password ){
-                usuarioAuth.setUsuarioBD(username);
-                usuarioAuth.setPasswordBD(password);
-            }else{
-                try {
-                    throw new Exception("Hubo un error en la autenticacion");
-                } catch (Exception e) {
-                    throw new RuntimeException("Error en la autenticacion");
-                }
+        try {
+            ResponseWrapper<List<Login>> usuariosBD = feignService.getAuthUsers();
+            List<Login> listaUsuarios = usuariosBD.getResponseEntity().getBody();
+
+            if (listaUsuarios == null || listaUsuarios.isEmpty()) {
+                modelAndView.addObject("error", "No hay usuarios registrados");
+                return modelAndView;
             }
-        });
-        request.getSession().setAttribute("username", usuarioAuth.getUsuarioBD());
-        response.sendRedirect("/");
 
+            boolean autenticado = listaUsuarios.stream()
+                    .anyMatch(user ->
+                            user.getUsuarioBD().equals(username) &&
+                                    user.getPasswordBD().equals(password)
+                    );
 
-        //Validar el usuario y contraseña contra los de una tabla en base de datos
-//        if(username.equals("nestor") && password.equals("333")){
-//            request.getSession().setAttribute("username", username);
-//            response.sendRedirect("/");
-//        }
-        //String usuario = feignService crear metodos en el servicio REST
-        return modelAndView;
+            if (autenticado) {
+                request.getSession().setAttribute("username", username);
+                response.sendRedirect("/");
+                return null;
+            } else {
+                modelAndView.addObject("error", "Usuario o contraseña incorrectos");
+                return modelAndView;
+            }
+
+        } catch (Exception e) {
+            modelAndView.addObject("error", "Error al conectar con el servicio de autenticación");
+            return modelAndView;
+        }
     }
+
+
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public Object logout(HttpServletRequest request, HttpServletResponse response){
