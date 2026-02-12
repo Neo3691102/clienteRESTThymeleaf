@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class Usuario {
+public class Usuario{
     private int idUsuario;
     private String nombre;
     private int edad;
