@@ -16,6 +16,7 @@ El proyecto demuestra cómo integrar:
 La aplicación actúa como cliente consumidor, no como proveedor principal del servicio.
 
 🛠 **Tecnologías utilizadas**
+
 🔹 Backend
 
 - Java 17
@@ -51,6 +52,7 @@ View → Plantillas Thymeleaf que renderizan los datos en HTML.
 Estructura compatible con arquitectura en capas:
 
 Controller → Service → REST Client
+
 🔄 **Funcionamiento técnico**
 
 El usuario accede a una ruta web (ej. /usuarios).
